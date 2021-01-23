@@ -1,9 +1,13 @@
+//import 'package:chatapp/helper/mostrar_alerta.dart';
+import 'package:chatapp/helper/mostrar_alerta.dart';
+import 'package:chatapp/services/auth_service.dart';
 import 'package:chatapp/widgets/btn_azul.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chatapp/widgets/custom_inpus.dart';
 import 'package:chatapp/widgets/label_widget.dart';
 import 'package:chatapp/widgets/logo_widget.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatelessWidget {
   @override
@@ -56,6 +60,7 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authServices = Provider.of<AuthService>(context);
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -69,21 +74,36 @@ class __FormState extends State<_Form> {
 
           CustomInput(
               icon: Icons.email,
-              placeHolder: 'Nombre',
+              placeHolder: 'Correo',
               keybordType: TextInputType.emailAddress,
               textEditingController: emailCtrl),
 
           CustomInput(
             icon: Icons.lock_outline,
-            placeHolder: 'Correo',
+            placeHolder: 'Contraseña',
             textEditingController: passwordCtrl,
             isPassrword: true,
           ),
           BtnAzul(
-              text: 'Ingrese',
-              onpress: () {
-                // Navigator.pushReplacementNamed(context, 'register');
-              }),
+            text: 'Crear Cuenta',
+            onpress: authServices.autenticando
+                ? null
+                : () async {
+                    FocusScope.of(context).unfocus();
+                    final registroOk = await authServices.register(
+                        nameCtrl.text.trim(),
+                        emailCtrl.text.trim(),
+                        passwordCtrl.text.trim());
+
+                    if (registroOk == true) {
+                      //TODO: Conectar a nuestro socket server
+                      Navigator.pushReplacementNamed(context, 'usuarios');
+                    } else {
+                      mostrarAlerta(context, 'Registro incorrecto',
+                          'el usuario que intentas registrar ya existe');
+                    }
+                  },
+          ),
           //CustomInput(),
         ],
       ),
