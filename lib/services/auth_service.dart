@@ -43,7 +43,7 @@ class AuthService with ChangeNotifier {
     final resp = await htttp.post('$url/login',
         body: jsonEncode(data), headers: {'content-Type': 'application/json'});
 
-    print(resp.body);
+    //Rprint(resp.body);
     this.autenticando = false;
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseModelFromJson(resp.body);
@@ -63,8 +63,6 @@ class AuthService with ChangeNotifier {
     final url = Enviroment.apiUrl;
     final resp = await htttp.post('$url/login/new',
         body: jsonEncode(data), headers: {'content-Type': 'application/json'});
-
-    print(resp.body);
 
     this.autenticando = false;
 

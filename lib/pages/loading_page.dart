@@ -1,6 +1,7 @@
 import 'package:chatapp/pages/login_page.dart';
 import 'package:chatapp/pages/usuarios_page.dart';
 import 'package:chatapp/services/auth_service.dart';
+import 'package:chatapp/services/socket_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,10 +22,11 @@ class LoadinPage extends StatelessWidget {
 
   Future chechLoginState(BuildContext context) async {
     final authServices = Provider.of<AuthService>(context, listen: false);
+    final socketService = Provider.of<SocketService>(context, listen: false);
     final autenticado = await authServices.isLoggedIn();
 
     if (autenticado) {
-//TODO: conectar al token server
+      socketService.connect();
       //Navigator.pushReplacementNamed(context, 'usuarios');
       Navigator.pushReplacement(
         context,
